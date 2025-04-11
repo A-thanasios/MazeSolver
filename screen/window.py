@@ -21,3 +21,7 @@ class Window:
 
     def close(self):
         self.root.state = False
+
+
+    def draw_line(self, line):
+        line.draw()
