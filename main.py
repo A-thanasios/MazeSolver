@@ -4,17 +4,23 @@ from screen.graphic.line import Line
 from screen.graphic.cell import Cell
 from screen.graphic.point import Point
 
-width = 1000
-height = 1000
+width = 800
+height = 600
+screen_size = Point(width, height)
 num_rows = 10
 num_cols = 10
-cell_size_x = width / num_cols
-cell_size_y = height / num_rows
+cell_size_x = 50
+cell_size_y = 50
 
 def main():
     win = Window(width, height)
-    maze = Maze(win, Point(width, height), 10, 10, 50, 50)
+
+    maze = Maze(screen_size,
+                num_rows, num_cols,
+                cell_size_x, cell_size_y,
+                win)
     maze.animate()
+    
     win.wait_for_close()
 
 if __name__ == "__main__":

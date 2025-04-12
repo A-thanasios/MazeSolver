@@ -4,31 +4,39 @@ from .graphic.cell import Cell
 
 
 class Maze:
-    def __init__(self, win, point, num_rows, num_cols, cell_size_x, cell_size_y):
+    def __init__(self, point, num_rows, num_cols, cell_size_x, cell_size_y, win=None):
         self.win = win
-        
         self.num_rows = num_rows
         self.num_cols = num_cols
         self.cell_size_x = cell_size_x
         self.cell_size_y = cell_size_y
-        self.cells = [[None for _ in range(num_cols)] for _ in range(num_rows)]
+        # 2D array of cells (rows x cols)
+        self.cells = [[None for _ in range(num_cols)] for _ in range(num_rows)] 
         self.point = self.starting_point(point)
         self.create_cells()
 
     def create_cells(self):
         for row in range(self.num_rows):
             for col in range(self.num_cols):
-                self.cells[row][col] = Cell(self.win, 
-                                       self.make_points(row, col), 
-                                       self.cell_size_x, 
-                                       self.cell_size_y)
+                self.cells[row][col] = Cell(self.make_points(row, col),                                   
+                                       self.win)
+        
+        self.break_entrance_and_exit()
+        
         for row in range(self.num_rows):
             for col in range(self.num_cols):
                 self.draw_cells(row, col)
-
+        
+    
     def draw_cells(self, row, col):
         self.cells[row][col].draw()
-
+    
+    def break_entrance_and_exit(self):
+        self.cells[0][0].break_wall("top")
+        self.draw_cells(0, 0)
+        self.cells[-1][-1].break_wall("bottom")
+        self.draw_cells(-1, -1)
+        self.animate()
 
     def animate(self):
         self.win.redraw()
