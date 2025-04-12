@@ -24,7 +24,7 @@ class Cell(Line):
         if len(self.lines) > 0:
             for line in self.lines:
                 if line:
-                    line.delete()
+                    line._Line__delete()
                 self.lines = []
 
         

@@ -14,7 +14,7 @@ class Line():
                                 fill=self.color, width=2)
         
     
-    def delete(self):
+    def __delete(self):
         if hasattr(self, 'canvas') and self.canvas:
             self.canvas.delete(self)
         # Clear references

@@ -39,7 +39,8 @@ class Maze:
         self.animate()
 
     def animate(self):
-        self.win.redraw()
+        if self.win:
+            self.win.redraw()
         time.sleep(0.05)
 
     def starting_point(self, point):
