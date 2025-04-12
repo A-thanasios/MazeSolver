@@ -1,10 +1,11 @@
+import random
 import time
 from .graphic.point import Point
 from .graphic.cell import Cell
 
 
 class Maze:
-    def __init__(self, point, num_rows, num_cols, cell_size_x, cell_size_y, win=None):
+    def __init__(self, point, num_rows, num_cols, cell_size_x, cell_size_y, win=None, seed=None):
         self.win = win
         self.num_rows = num_rows
         self.num_cols = num_cols
@@ -14,11 +15,13 @@ class Maze:
         self.cells = [[None for _ in range(num_cols)] for _ in range(num_rows)] 
         self.point = self.starting_point(point)
         self.create_cells()
+        self.seed = seed if not seed else random.seed(seed)
 
     def create_cells(self):
         for row in range(self.num_rows):
             for col in range(self.num_cols):
-                self.cells[row][col] = Cell(self.make_points(row, col),                                   
+                self.cells[row][col] = Cell(self.make_points(row, col),
+                                             row, col,                                   
                                        self.win)
         
         self.break_entrance_and_exit()
@@ -38,6 +41,54 @@ class Maze:
         self.draw_cells(-1, -1)
         self.animate()
 
+    def break_walls(self, cell):
+        cell.visited = True
+        while True:
+            cells = []
+            neighbors = self.get_unvisited_neighbors(cell)
+            if len(neighbors) == 0:
+                return
+            next_cell = random.choice(neighbors)
+            self.break_wall(cell, next_cell)
+            print('aita')
+            self.draw_cells(cell.row, cell.col)
+            self.draw_cells(next_cell.row, next_cell.col)
+            self.animate()
+            self.break_walls(next_cell)
+
+    def get_unvisited_neighbors(self, cell):
+        neighbors = []
+        if cell.row - 1 >= 0 and not self.cells[cell.row - 1][cell.col].visited:
+            neighbors.append(self.cells[cell.row - 1][cell.col])
+
+        if cell.row + 1 < self.num_rows and not self.cells[cell.row + 1][cell.col].visited:
+            neighbors.append(self.cells[cell.row + 1][cell.col])
+
+        if cell.col - 1 >= 0 and not self.cells[cell.row][cell.col - 1].visited:
+            neighbors.append(self.cells[cell.row][cell.col - 1])
+
+        if cell.col + 1 < self.num_cols and not self.cells[cell.row][cell.col + 1].visited:
+            neighbors.append(self.cells[cell.row][cell.col + 1])
+        
+        return neighbors
+        
+    def break_wall(self, cell, next_cell):
+        if cell.row == next_cell.row:
+            if cell.col > next_cell.col:
+                cell.break_wall("left")
+                next_cell.break_wall("right")
+            else:
+                cell.break_wall("right")
+                next_cell.break_wall("left")
+        else:
+            if cell.row > next_cell.row:
+                cell.break_wall("top")
+                next_cell.break_wall("bottom")
+            else:
+                cell.break_wall("bottom")
+                next_cell.break_wall("top")
+                
+        
     def animate(self):
         if self.win:
             self.win.redraw()

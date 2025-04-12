@@ -19,7 +19,9 @@ def main():
                 num_rows, num_cols,
                 cell_size_x, cell_size_y,
                 win)
+    maze.break_walls(maze.cells[0][0])
     maze.animate()
+    
     
     win.wait_for_close()
 
