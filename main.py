@@ -1,13 +1,21 @@
+from screen.maze import Maze
 from screen.window import Window
 from screen.graphic.line import Line
 from screen.graphic.cell import Cell
 from screen.graphic.point import Point
-win = Window(800, 600)
 
-cell = Cell(win=win, point1=Point(100, 100), point2=Point(50, 50))
-cell2 = Cell(win=win, point1=Point(200, 200), point2=Point(100, 100))
-cell.draw()
-cell2.draw()
-cell.draw_move(cell2)
+width = 1000
+height = 1000
+num_rows = 10
+num_cols = 10
+cell_size_x = width / num_cols
+cell_size_y = height / num_rows
 
-win.wait_for_close()
+def main():
+    win = Window(width, height)
+    maze = Maze(win, Point(width, height), 10, 10, 50, 50)
+    maze.animate()
+    win.wait_for_close()
+
+if __name__ == "__main__":
+    main()
