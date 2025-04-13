@@ -362,6 +362,49 @@ class TestMaze(unittest.TestCase):
             for col in range(num_cols):
                 self.assertFalse(maze.cells[row][col].visited)
 
+    def test_wall_between_horizontal_neighbors(self):
+        num_cols = 12
+        num_rows = 10
+        cell_size_x = 50
+        cell_size_y = 50
+        maze = Maze(Point(0, 0), num_rows, num_cols, cell_size_x, cell_size_y)
+        
+        # Test cells in the same row
+        cell1 = maze.cells[5][5]
+        cell2 = maze.cells[5][6]
+        
+        # Initially, all walls should be present
+        self.assertTrue(maze.wall_between(cell1, cell2))
+        
+        # Break the wall between them
+        maze.break_wall(cell1, cell2)
+        
+        # Now there should be no wall between them
+        self.assertFalse(maze.wall_between(cell1, cell2))
+        
+    def test_wall_between_vertical_neighbors(self):
+        num_cols = 12
+        num_rows = 10
+        cell_size_x = 50
+        cell_size_y = 50
+        maze = Maze(Point(0, 0), num_rows, num_cols, cell_size_x, cell_size_y)
+        
+        # Test cells in the same column
+        cell1 = maze.cells[5][5]
+        cell2 = maze.cells[6][5]
+        
+        # Initially, all walls should be present
+        self.assertTrue(maze.wall_between(cell1, cell2))
+        
+        # Break the wall between them
+        maze.break_wall(cell1, cell2)
+        
+        # Now there should be no wall between them
+        self.assertFalse(maze.wall_between(cell1, cell2))
+        
+
+
+
 class TestCell(unittest.TestCase):
     def test_cell_creation(self):
         cell = Cell((Point(0, 0), Point(50, 50)), 0, 0)

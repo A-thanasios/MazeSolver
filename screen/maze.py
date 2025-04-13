@@ -61,16 +61,23 @@ class Maze:
 
         self.animate()
         cell.visited = True
+        
+        # If we've reached the exit cell, return True
+        if cell == self.cells[-1][-1]:
+            return True
+            
         neighbors = self.get_unvisited_neighbors(cell)
         for neighbor in neighbors:
             if not self.wall_between(cell, neighbor):
-                if self.solve(cell):
+                # Try to solve from the neighbor
+                if self.solve(neighbor):
                     cell.draw_move(neighbor, True)
                     return True
                 else:
                     cell.draw_move(neighbor)
-            return False
-
+        
+        # If we've tried all neighbors and none led to the exit
+        return False
 
     def get_unvisited_neighbors(self, cell):
         neighbors = []
@@ -104,8 +111,17 @@ class Maze:
                 cell.break_wall("bottom")
                 next_cell.break_wall("top")
 
-    def wall_between(cell, neighbor):
-        return False
+    def wall_between(self, cell, neighbor):
+        if cell.row == neighbor.row:
+            if cell.col > neighbor.col:
+                return cell.has_left_wall or neighbor.has_right_wall
+            else:
+                return cell.has_right_wall or neighbor.has_left_wall
+        else:
+            if cell.row > neighbor.row:
+                return cell.has_top_wall or neighbor.has_bottom_wall
+            else:
+                return cell.has_bottom_wall or neighbor.has_top_wall
 
     def reset_cells_visited(self):
         for row in range(self.num_rows):
@@ -116,7 +132,7 @@ class Maze:
     def animate(self):
         if self.win:
             self.win.redraw()
-        time.sleep(0.05)
+        time.sleep(0.02)
 
     def starting_point(self, point):
         return (point / 2) - Point(self.cell_size_x * self.num_rows / 2,

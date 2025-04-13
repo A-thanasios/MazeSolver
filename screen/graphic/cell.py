@@ -75,23 +75,18 @@ class Cell(Line):
                                            to_cell.get_center_point(), "red" if undo else "gray"))
 
     def break_wall(self, side):
-        print(f"Breaking {side} wall for cell ({self.row}, {self.col})")
         match side:
             case "left":
                 self.has_left_wall = False
-                print(f"Cell ({self.row}, {self.col}) left wall state: {self.has_left_wall}")
                 self.draw()
             case "right":
                 self.has_right_wall = False
-                print(f"Cell ({self.row}, {self.col}) right wall state: {self.has_right_wall}")
                 self.draw()
             case "top":
                 self.has_top_wall = False
-                print(f"Cell ({self.row}, {self.col}) top wall state: {self.has_top_wall}")
                 self.draw()
             case "bottom":
                 self.has_bottom_wall = False
-                print(f"Cell ({self.row}, {self.col}) bottom wall state: {self.has_bottom_wall}")
                 self.draw()
 
     def get_left_bottom_point(self):
