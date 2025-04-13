@@ -50,11 +50,27 @@ class Maze:
                 return
             next_cell = random.choice(neighbors)
             self.break_wall(cell, next_cell)
-            print('aita')
             self.draw_cells(cell.row, cell.col)
             self.draw_cells(next_cell.row, next_cell.col)
             self.animate()
             self.break_walls(next_cell)
+
+    def solve(self, cell=None):
+        if not cell:
+            cell = self.cells[0][0]
+
+        self.animate()
+        cell.visited = True
+        neighbors = self.get_unvisited_neighbors(cell)
+        for neighbor in neighbors:
+            if not self.wall_between(cell, neighbor):
+                if self.solve(cell):
+                    cell.draw_move(neighbor, True)
+                    return True
+                else:
+                    cell.draw_move(neighbor)
+            return False
+
 
     def get_unvisited_neighbors(self, cell):
         neighbors = []
@@ -87,6 +103,14 @@ class Maze:
             else:
                 cell.break_wall("bottom")
                 next_cell.break_wall("top")
+
+    def wall_between(cell, neighbor):
+        return False
+
+    def reset_cells_visited(self):
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                self.cells[row][col].visited = False
                 
         
     def animate(self):

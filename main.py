@@ -20,6 +20,7 @@ def main():
                 cell_size_x, cell_size_y,
                 win)
     maze.break_walls(maze.cells[0][0])
+    maze.reset_cells_visited()
     maze.animate()
     
     

@@ -295,6 +295,73 @@ class TestMaze(unittest.TestCase):
         self.assertEqual(cell1.has_left_wall, False)
         self.assertEqual(cell2.has_right_wall, False)
 
+    def test_maze_reset_cells_visited(self):
+        num_cols = 12
+        num_rows = 10
+        cell_size_x = 50
+        cell_size_y = 50
+        maze = Maze(Point(0, 0), num_rows, num_cols, cell_size_x, cell_size_y)
+        
+        # Mark some cells as visited
+        maze.cells[0][0].visited = True
+        maze.cells[5][5].visited = True
+        maze.cells[num_rows-1][num_cols-1].visited = True
+        
+        # Verify cells are marked as visited
+        self.assertTrue(maze.cells[0][0].visited)
+        self.assertTrue(maze.cells[5][5].visited)
+        self.assertTrue(maze.cells[num_rows-1][num_cols-1].visited)
+        
+        # Reset visited states
+        maze.reset_cells_visited()
+        
+        # Verify all cells are marked as unvisited
+        for row in range(num_rows):
+            for col in range(num_cols):
+                self.assertFalse(maze.cells[row][col].visited)
+
+    def test_maze_reset_cells_visited_after_maze_generation(self):
+        # Use a smaller maze to avoid recursion issues
+        num_cols = 3
+        num_rows = 3
+        cell_size_x = 50
+        cell_size_y = 50
+        maze = Maze(Point(0, 0), num_rows, num_cols, cell_size_x, cell_size_y)
+        
+        # Generate maze (this will mark cells as visited)
+        maze.break_walls(maze.cells[0][0])
+        
+        # Reset visited states
+        maze.reset_cells_visited()
+        
+        # Verify all cells are marked as unvisited
+        for row in range(num_rows):
+            for col in range(num_cols):
+                self.assertFalse(maze.cells[row][col].visited)
+
+    def test_maze_reset_cells_visited_partial_maze(self):
+        num_cols = 12
+        num_rows = 10
+        cell_size_x = 50
+        cell_size_y = 50
+        maze = Maze(Point(0, 0), num_rows, num_cols, cell_size_x, cell_size_y)
+        
+        # Mark a specific path as visited
+        path = [
+            (0, 0), (0, 1), (0, 2),
+            (1, 2), (2, 2), (2, 1)
+        ]
+        for row, col in path:
+            maze.cells[row][col].visited = True
+        
+        # Reset visited states
+        maze.reset_cells_visited()
+        
+        # Verify all cells are marked as unvisited
+        for row in range(num_rows):
+            for col in range(num_cols):
+                self.assertFalse(maze.cells[row][col].visited)
+
 class TestCell(unittest.TestCase):
     def test_cell_creation(self):
         cell = Cell((Point(0, 0), Point(50, 50)), 0, 0)
